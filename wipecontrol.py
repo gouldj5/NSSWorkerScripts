@@ -16,7 +16,7 @@ def wipecontrol():
 	crt.Screen.Synchronous = True
 	crt.Screen.Send("admin" + chr(13))
 	crt.Screen.WaitForString("Password: ")
-        passwd = crt.Dialog.Prompt("Enter password:", "Login", "", True)            # Prompt for password as to not include it in the script
+        passwd = crt.Dialog.Prompt("Enter password:", "Login", "", True)  
 	crt.Screen.Send(passwd + chr(13))
 	crt.Screen.WaitForString(">")
 	crt.Screen.Send("en" + chr(13))
@@ -37,3 +37,18 @@ def wipecontrol():
 	crt.Screen.WaitForString("Proceed with reload? [confirm]")
 	crt.Screen.Send(chr(13))
 wipecontrol()   #Call functon
+
+
+def SendExpect(send, expect):
+	# Returns true if the text in 'send' was successfully sent and the
+	# text in 'expect' was successfully found as a result.
+
+	# If we're not connected, we can't possibly return true, or even
+	# send/recv text
+	if not SCRIPT_TAB.Session.Connected:
+		return
+
+	SCRIPT_TAB.Screen.Send(send + '\r')
+	SCRIPT_TAB.Screen.WaitForString(expect)
+
+	return True
