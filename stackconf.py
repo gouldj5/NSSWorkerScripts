@@ -6,7 +6,7 @@
 # Author:       Joshua Gould
 # Organization: Rowan University
 # Created:      Jan. 31, 2019
-# Updated:      Deb. 7, 2019
+# Updated:      Feb. 7, 2019
 ###################################
 #
 # Description
