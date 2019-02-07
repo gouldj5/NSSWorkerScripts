@@ -1,7 +1,7 @@
 # NSSWorkerScripts
 Scripts Used to Configure Switches within Rowan Directory
 
-Directory lists scipts that were custom made or edited specifically for autonomous network deployment and are finished in development
+Directory lists scipts that were custom made or edited specifically for autonomous network deployment and are finished in development enough for public use
 
 ## Directory
 - **stackconf.py**    : set stack order for initial switch configuration
