@@ -1,5 +1,27 @@
 #$language = "Python"
 #$interface = "1.0"
+# interpreter for SecureCRT terminal
+
+###################################
+# Author:       Joshua Gould
+# Organization: Rowan University
+# Created:      Jan. 31, 2019
+# Updated:      Deb. 7, 2019
+###################################
+#
+# Description
+# Sets stack configuration for switch to organize the stack
+#
+# INSTRUCTIONS
+#
+# 1. In SecureCRT or a like Console terminal, open Scripts > Run
+# 2. Navigate in file manager to select scripts
+# 3. Reach initial condition in connected terminal
+# 4. Address number of switches in stack into prompt
+# 5. Fill prompt with the number of the switch from the "show switch" command that you wish to address
+# 6. Fill next prompt with switch number change
+# 7. Priority and order is populated.
+
 
 import re
 import datetime
@@ -14,15 +36,6 @@ MsgBox = crt.Dialog.MessageBox
 Prompt = crt.Dialog.Prompt
 import time
 
-global g_strConfigToSave
-g_strConfigToSave = "running"
-global g_strAdditionalArgs
-g_strAdditionalArgs = ""
-
-strHome = os.path.expanduser("~")
-global g_strMyDocs
-g_strMyDocs = strHome.replace("\\", "/") + "/Documents"
-
 global objTab
 objTab = crt.GetScriptTab()
 objTab.Screen.Synchronous = True
@@ -32,52 +45,57 @@ SCRIPT_TAB.Screen.Synchronous = True
 
 def Main():
 
-    # Detect the shell prompt by getting all the text to the left
-    # of the cursor.
-
-    #SendExpect(chr(13), "Press RETURN to get started")
-
-    #crt.Screen.WaitForString("? [yes/no]:")
-    #crt.Screen.Send("n" + chr(13))
-
-    crt.Screen.WaitForString (">")
-    crt.Screen.Send ("en" + chr(13))
+    crt.Screen.WaitForString (">")                       #initial condition statements to approach enable state
+    crt.Screen.Send ("en" + chr(13))                     #and enter show switch command for user
     crt.Screen.WaitForString("#")
     crt.Screen.Send("show switch" + chr(13))
-    delay(1)
+
+    delay(.1)                                            #function to show switch before prompt (delays 100ms)
+
     crt.Screen.Send(chr(13))
+    NumberSet()                                          #function that sets number of times to run StackSet()
 
-
-    NumberSet()
     crt.Screen.Send(chr(13))
     crt.Screen.Send("show switch" + chr(13))
     objTab.Session.SetStatusText("Stack changes made!")
 
+    reloadsw()
 
-    #SendExpect("copy usbflash0:cat3k_caa-universalk9.16.03.05b.SPA.bin flash:","#")
-    #SendExpect("copy usbflash0:cat3k_caa-universalk9.16.03.05b.SPA.bin flash-2:", "#")
-    #SendExpect("copy usbflash0:cat3k_caa-universalk9.16.03.05b.SPA.bin flash-3:", "#")
-    #SendExpect("copy usbflash0:cat3k_caa-universalk9.16.03.05b.SPA.bin flash-4:", "#")
-    #SendExpect("copy usbflash0:cat3k_caa-universalk9.16.03.05b.SPA.bin flash-5:", "#")
-    #SendExpect("copy usbflash0:cat3k_caa-universalk9.16.03.05b.SPA.bin flash-6:", "#")
-    #SendExpect("copy usbflash0:cat3k_caa-universalk9.16.03.05b.SPA.bin flash-7:", "#")
-    #SendExpect("copy usbflash0:cat3k_caa-universalk9.16.03.05b.SPA.bin flash-8:", "#")
-    #SendExpect("copy usbflash0:cat3k_caa-universalk9.16.03.05b.SPA.bin flash-9:", "#")
 
+
+
+def reloadsw():
+    crt.Screen.WaitForString("#")
+    crt.Screen.Send("reload" + chr(13))
+    crt.Screen.WaitForString("[confirm]")
+    crt.Screen.Send(chr(13))
+
+    return
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def delay(seconds):
         crt.Screen.WaitForString("#")
 	return time.sleep(seconds)
 
-def NumberSet():
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def NumberSet():            #runs command for number of switches provided in stack
+    #possible improvements can read output of sh sw, address VER mismatch, and determine num of switches
     delay(1)
     numOswitch = crt.Dialog.Prompt("How many switches are in the stack? (1-9):", "Enter", "", False)
+
+
     intNum = int(numOswitch)
+
+    if numOswitch == [1, 9]:
 
     for x in range(0,intNum):
         StackSet()
 
     return
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def StackSet():
     # type: () -> object
@@ -211,8 +229,8 @@ def StackSet():
     crt.Screen.WaitForString("?[y / n]")
     crt.Screen.Send("y")
     return
-
     
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def SendExpect(send, expect):
 	# Returns true if the text in 'send' was successfully sent and the
@@ -229,25 +247,7 @@ def SendExpect(send, expect):
 	return True
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def GetHostname():
-    strPrompt = GetTextLeftOfCursor()
-    objMatch = re.match(r'^([0-9a-zA-Z\_\-\.]+)', strPrompt)
-    if objMatch:
-        return objMatch.group(1)
-    else:
-        FlashStatusText("No match on hostname pattern!")
-        return
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def GetTextLeftOfCursor():
-    global objTab
-    nRow = objTab.Screen.CurrentRow
-    nCol = objTab.Screen.CurrentColumn - 1
-    strTextLeftOfCursor = objTab.Screen.Get(nRow, 1, nRow, nCol)
-    return strTextLeftOfCursor
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def FlashStatusText(strMsg):
     global objTab
     nShortPause = 200
