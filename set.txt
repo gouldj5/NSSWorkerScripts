@@ -1,0 +1,3 @@
+sh sw detail
+sh cdp nei
+sh ip arp
