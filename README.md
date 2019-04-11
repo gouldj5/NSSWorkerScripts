@@ -9,7 +9,7 @@ Directory lists scipts that were custom made or edited specifically for autonomo
 - **WipeAP.py**       : wipe Aruba AP to factory default from boot mode
 - **wipecontrol.py**  : wiped configured and secured CISCO switch (most models)
 
-# Instuctions for Running scripts 
+## Instuctions for Running scripts 
 
 - Depending on the script you wish to run, python scripts will run in SecureCRT's compiler as long as there is an active connection.
 
