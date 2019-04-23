@@ -13,7 +13,7 @@ Directory lists scipts that were custom made or edited specifically for autonomo
 ## Instuctions for Running scripts 
 
 - Depending on the script you wish to run...
-      - python scripts will run in SecureCRT's compiler as long as there is an active connection with Script > Run Script
-      - google App Scripts will run in google's script editor (Tools > Script Editor)
+- python scripts will run in SecureCRT's compiler as long as there is an active connection with Script > Run Script
+- google App Scripts will run in google's script editor (Tools > Script Editor)
 
 *For more details on other scripts provided see: https://www.vandyke.com/support/tips/*
